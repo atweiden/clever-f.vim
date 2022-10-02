@@ -38,35 +38,27 @@ highlight default CleverFDefaultLabel ctermfg=red ctermbg=NONE cterm=bold,underl
 "   Low:    Default highlights
 " When the variable is defined, it should be linked with :hi! since :hi does
 " not overwrite existing highlight group. (#50)
-function! s:link_highlights() abort
-    if g:clever_f_mark_cursor
-        if exists('g:clever_f_mark_cursor_color')
-            execute 'highlight! link CleverFCursor' g:clever_f_mark_cursor_color
-        else
-            highlight link CleverFCursor Cursor
-        endif
+if g:clever_f_mark_cursor
+    if exists('g:clever_f_mark_cursor_color')
+        execute 'highlight! link CleverFCursor' g:clever_f_mark_cursor_color
+    else
+        highlight link CleverFCursor Cursor
     endif
-    if g:clever_f_mark_char
-        if exists('g:clever_f_mark_char_color')
-            execute 'highlight! link CleverFChar' g:clever_f_mark_char_color
-        else
-            highlight link CleverFChar CleverFDefaultLabel
-        endif
+endif
+if g:clever_f_mark_char
+    if exists('g:clever_f_mark_char_color')
+        execute 'highlight! link CleverFChar' g:clever_f_mark_char_color
+    else
+        highlight link CleverFChar CleverFDefaultLabel
     endif
-    if g:clever_f_mark_direct
-        if exists('g:clever_f_mark_direct_color')
-            execute 'highlight! link CleverFDirect' g:clever_f_mark_direct_color
-        else
-            highlight link CleverFDirect CleverFDefaultLabel
-        endif
+endif
+if g:clever_f_mark_direct
+    if exists('g:clever_f_mark_direct_color')
+        execute 'highlight! link CleverFDirect' g:clever_f_mark_direct_color
+    else
+        highlight link CleverFDirect CleverFDefaultLabel
     endif
-endfunction
-
-call s:link_highlights()
-augroup plugin-clever-f-link-highlight
-    autocmd!
-    autocmd ColorScheme * call s:link_highlights()
-augroup END
+endif
 
 if g:clever_f_clean_labels_eagerly
     augroup plugin-clever-f-permanent-finalizer
@@ -271,7 +263,7 @@ function! clever_f#find_with(map) abort
                  \ mode ==# 'ce' || mode ==? 's' || mode ==# "\<C-s>"
                     augroup plugin-clever-f-finalizer
                         autocmd CursorMoved <buffer> call s:maybe_finalize()
-                        autocmd InsertEnter,TextChanged <buffer> call s:finalize()
+                        autocmd InsertEnter <buffer> call s:finalize()
                     augroup END
                     call s:mark_char_in_current_line(s:previous_map[mode], s:previous_char_num[mode])
                 endif
